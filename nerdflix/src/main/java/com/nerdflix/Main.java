@@ -4,12 +4,22 @@ import com.nerdflix.bigdata.BigDataMerge;
 import com.nerdflix.model.Serie;
 import com.nerdflix.model.Temporada;
 import com.nerdflix.service.SerieService;
+import com.nerdflix.stress.Seeder;
+import com.nerdflix.stress.Benchmark;
 
 public class Main {
     public static void main(String[] args) {
 
         // TICKET #1 — BIG DATA MERGE
         // BigDataMerge.run();
+
+        // TICKET #3 — STRESS TEST
+        try {
+            Seeder.run();
+            Benchmark.run();
+        } catch (Exception e) {
+            System.err.println("Error stress test: " + e.getMessage());
+        }
 
         Serie serie = new Serie("House of Cards", "Thriller Politic");
 
