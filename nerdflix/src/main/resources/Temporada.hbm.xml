@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.nerdflix">
+    <class name="Temporada" table="Temporada">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="numero" column="numero"/>
+        <property name="anyEstrena" column="any_estrena"/>
+        
+        <many-to-one name="serie" class="Serie" column="serie_id" not-null="true"/>
+    </class>
+</hibernate-mapping>
