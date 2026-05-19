@@ -1,0 +1,5 @@
+.vscode
+.idea
+nerdflix/target/
+nerdflix/data/
+nerdflix/bbdd

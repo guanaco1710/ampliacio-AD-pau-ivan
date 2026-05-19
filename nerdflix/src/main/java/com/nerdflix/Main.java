@@ -15,6 +15,9 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+        // 0. TICKET #1 — BIG DATA MERGE
+        bigDataMerge();
+
         // Preparem dades (compte amb els duplicats!!)
 
         Serie newSerie = new Serie("House of Cards", "Thriller Politico");
@@ -49,6 +52,21 @@ public class Main {
         // 4. CONSULTA AMB CRITERIA
         consultesCriteria();
 
+    }
+
+    private static void bigDataMerge() {
+        String dir = "data";
+        try {
+            GeneradorCSV.generar(dir);
+            MergeJoin.executar(
+                dir + "/series_metadata.csv",
+                dir + "/series_estadistiques.csv",
+                dir + "/informe_series.csv",
+                dir + "/log_errores.txt"
+            );
+        } catch (Exception e) {
+            System.err.println("Error al Merge Join: " + e.getMessage());
+        }
     }
 
     private static void guardaAmbJDBC(Serie s) {
