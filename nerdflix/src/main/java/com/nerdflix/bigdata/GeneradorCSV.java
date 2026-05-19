@@ -1,4 +1,6 @@
-package com.nerdflix;
+package com.nerdflix.bigdata;
+
+import com.nerdflix.constants.AppConstants;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,30 +17,19 @@ public class GeneradorCSV {
     }
 
     private static void generarSeriesMetadata(String path) throws IOException {
-        // Sorted ascending by ID_SERIE — required for Merge Join
         String[][] dades = {
-            {"S001", "Breaking Bad",       "Drama"},
-            {"S002", "Dark",               "Ciencia Ficcio"},
-            {"S003", "House of Cards",     "Thriller Politic"},
-            {"S005", "Peaky Blinders",     "Drama"},
-            {"S006", "Stranger Things",    "Terror"},
-            {"S008", "The Crown",          "Drama Historic"},
-            {"S009", "The Witcher",        "Fantasia"},
+            {"S001", "Breaking Bad",    "Drama"},
+            {"S002", "Dark",            "Ciencia Ficcio"},
+            {"S003", "House of Cards",  "Thriller Politic"},
+            {"S005", "Peaky Blinders",  "Drama"},
+            {"S006", "Stranger Things", "Terror"},
+            {"S008", "The Crown",       "Drama Historic"},
+            {"S009", "The Witcher",     "Fantasia"},
         };
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
-            bw.write("ID_SERIE,TITOL,GENERE");
-            bw.newLine();
-            for (String[] fila : dades) {
-                bw.write(String.join(",", fila));
-                bw.newLine();
-            }
-        }
+        escriureFitxer(path, "ID_SERIE,TITOL,GENERE", dades);
     }
 
     private static void generarSeriesEstadistiques(String path) throws IOException {
-        // Sorted ascending by ID_SERIE — required for Merge Join
-        // Orphans marked intentionally to test log_errores.txt output
         String[][] dades = {
             {"S001", "4820000", "9.5"},
             {"S002", "1200000", "8.8"},
@@ -48,9 +39,13 @@ public class GeneradorCSV {
             {"S007", "180000",  "6.5"}, // orfe: S007 no existeix a metadata
             {"S009", "3300000", "8.2"},
         };
+        escriureFitxer(path, "ID_SERIE,VISUALITZACIONS,PUNTUACIO", dades);
+    }
 
+    private static void escriureFitxer(String path, String capcalera,
+                                        String[][] dades) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
-            bw.write("ID_SERIE,VISUALITZACIONS,PUNTUACIO");
+            bw.write(capcalera);
             bw.newLine();
             for (String[] fila : dades) {
                 bw.write(String.join(",", fila));

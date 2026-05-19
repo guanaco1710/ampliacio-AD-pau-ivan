@@ -1,10 +1,11 @@
-package com.nerdflix;
+package com.nerdflix.bigdata;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Merge Join O(n+m) sobre dos fitxers CSV de Nerdflix ordenats per ID_SERIE.
@@ -22,10 +23,10 @@ public class MergeJoin {
     /**
      * Punt d'entrada principal. Obre els fitxers i orquestra el procés.
      *
-     * @param pathMetadata     ruta al fitxer series_metadata.csv (ordenat per ID_SERIE)
+     * @param pathMetadata      ruta al fitxer series_metadata.csv (ordenat per ID_SERIE)
      * @param pathEstadistiques ruta al fitxer series_estadistiques.csv (ordenat per ID_SERIE)
-     * @param pathResultat     ruta de sortida per a l'informe complet
-     * @param pathLog          ruta de sortida per als registres orfes
+     * @param pathResultat      ruta de sortida per a l'informe complet
+     * @param pathLog           ruta de sortida per als registres orfes
      * @throws IOException si algun fitxer no es pot llegir o escriure
      */
     public static void executar(String pathMetadata, String pathEstadistiques,
@@ -55,7 +56,6 @@ public class MergeJoin {
                                             BufferedWriter bwLog) throws IOException {
         bwResultat.write("ID_SERIE,TITOL,GENERE,VISUALITZACIONS,PUNTUACIO");
         bwResultat.newLine();
-
         bwLog.write("=== LOG D'ERRORS — REGISTRES ORFES ===");
         bwLog.newLine();
     }
@@ -77,7 +77,6 @@ public class MergeJoin {
         String lineaEstadistiques = brEstadistiques.readLine();
 
         while (lineaMetadata != null && lineaEstadistiques != null) {
-
             String[] metadata      = lineaMetadata.split(SEP);
             String[] estadistiques = lineaEstadistiques.split(SEP);
 
@@ -88,15 +87,11 @@ public class MergeJoin {
                 coincidencies++;
                 lineaMetadata      = brMetadata.readLine();
                 lineaEstadistiques = brEstadistiques.readLine();
-
             } else if (cmp < 0) {
-                // Serie amb metadata però sense estadístiques (no estrenada?)
                 escriureOrfe("[SENSE-ESTADISTIQUES] ", lineaMetadata, bwLog);
                 orfes++;
                 lineaMetadata = brMetadata.readLine();
-
             } else {
-                // Estadístiques sense serie al catàleg (error de dades)
                 escriureOrfe("[SENSE-METADATA]      ", lineaEstadistiques, bwLog);
                 orfes++;
                 lineaEstadistiques = brEstadistiques.readLine();
@@ -150,7 +145,6 @@ public class MergeJoin {
 
     /**
      * Buida les línies restants d'un fitxer quan l'altre ja s'ha esgotat.
-     * Cada línia sobrant és un registre orfe.
      *
      * @param primeraLinia línia ja llegida del BufferedReader (pot ser null)
      * @param br           lector del fitxer a buidar
@@ -162,7 +156,7 @@ public class MergeJoin {
     private static int buidarRestes(String primeraLinia, BufferedReader br, String tipus,
                                      BufferedWriter bwLog) throws IOException {
         int count = 0;
-        String linia = primeraLinia;  // already read from BufferedReader, don't skip it
+        String linia = primeraLinia;
         while (linia != null) {
             escriureOrfe(tipus, linia, bwLog);
             count++;
